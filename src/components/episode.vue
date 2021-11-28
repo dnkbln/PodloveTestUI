@@ -73,8 +73,8 @@
         <button class="btn btn-blue" v-on:click="prevTranscriptToWordpress">Prev</button>
         <button class="btn btn-blue" v-on:click="nextTranscriptToWordpress">Next</button>
         <button class="btn btn-blue" v-on:click="setTranscriptToWordpress">Write Transcript</button>
+        <button class="btn btn-blue" v-on:click="deleteTranscriptToWordpress">Delete Transcript</button>
         <br/>
-        {{file_content}}
         <br/>
 
         <table>
@@ -221,14 +221,14 @@ export default {
         setTranscriptToWordpress: function() {
             let url = 'http://localhost:10013/wp-json/podlove/v2/transcripts' + '/' + this.episodeId;
 
-            if (this.transcript.length < 1) {
+            if (this.file_content.length < 1) {
                 alert("Please select a transcript before upload to wordpress");
                 return;
             }
 
             let episodeData = {
                 type: 'vtt',
-                transcript: this.transcripts,
+                content: this.file_content,
             }
             fetch(url, {
                 method: 'POST',
@@ -237,6 +237,20 @@ export default {
                     'Content-Type': 'application/json; charset=utf-8'
                 },
                 body: JSON.stringify(episodeData)
+            })
+                .then(responce => responce.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err));
+        },
+        deleteTranscriptToWordpress: function() {
+            let url = 'http://localhost:10013/wp-json/podlove/v2/transcripts' + '/' + this.episodeId;
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
             })
                 .then(responce => responce.json())
                 .then(data => console.log(data))
