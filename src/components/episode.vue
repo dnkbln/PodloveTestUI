@@ -239,7 +239,9 @@ export default {
                 body: JSON.stringify(episodeData)
             })
                 .then(responce => responce.json())
-                .then(data => console.log(data))
+                .then(json => {
+                    this.transcripts = json.transcript;
+                })
                 .catch(err => console.log(err));
         },
         deleteTranscriptToWordpress: function() {
